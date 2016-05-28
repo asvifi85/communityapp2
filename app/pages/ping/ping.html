@@ -3,8 +3,37 @@
 </ion-navbar>
 
 <ion-content padding class="ping">
-  <button block (click)="ping()">Ping</button>
-  <button block (click)="securedPing()" *ngIf="auth.authenticated()">Secured Ping</button>
+ <form  #signupCreds="ngForm" (ngSubmit)="signup(signupCreds.value)">
+<ion-item>
+            <ion-label>Name</ion-label>
+            <ion-input type="text" ngControl="name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Email</ion-label>
+            <ion-input type="text" ngControl="username"></ion-input>
+          </ion-item>
+		  <ion-item>
+            <ion-label>Phone</ion-label>
+            <ion-input type="text" [(ngModel)]="phonenum" ngControl="phone"></ion-input>
+          </ion-item>	
+
+          <ion-item>
+            <ion-label>Password</ion-label>
+            <ion-input type="password" ngControl="password"></ion-input>
+          </ion-item>
+			<ion-item>
+        <ion-label stacked>Community</ion-label>
+        <ion-select ngControl="community" item-right>
+          <ion-option value="communityA">Community A</ion-option>
+          <ion-option value="communityB">Community B</ion-option>
+          <ion-option value="communityC">Community C</ion-option>
+        </ion-select>
+      </ion-item>
+  <button block>Signup</button>
+  </form>
+  
+  <!-- 
+  <button block (click)="securedPing()" *ngIf="auth.authenticated()">Secured Ping</button> -->
   
   <p>{{ message }}</p>
   

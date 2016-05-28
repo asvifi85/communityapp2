@@ -2,20 +2,20 @@ import {Storage, LocalStorage} from 'ionic-angular';
 import {AuthHttp, JwtHelper, tokenNotExpired} from 'angular2-jwt';
 import {Injectable, NgZone} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-
+import {FirebaseService} from '../firebaseService';
 // Avoid name not found warnings
 declare var Auth0Lock: any;
 
 @Injectable()
 export class AuthService {
   jwtHelper: JwtHelper = new JwtHelper();
-  lock = new Auth0Lock('{CLIENT_ID}', '{DOMAIN}');
+  lock = new Auth0Lock('{DyG9nCwIEofSy66QM3oo5xU6NFs3TmvT}', '{contoso.auth0.com}');
   local: Storage = new Storage(LocalStorage);
-  refreshSubscription: any;
+ // refreshSubscription: any;
   user: Object;
   zoneImpl: NgZone;
   
-  constructor(private authHttp: AuthHttp, zone: NgZone) {
+  constructor(private authHttp: AuthHttp, zone: NgZone,private fbs: FirebaseService) {
     this.zoneImpl = zone;
     // Check if there is a profile saved in local storage
     this.local.get('profile').then(profile => {
@@ -31,9 +31,26 @@ export class AuthService {
     return tokenNotExpired();
   }
   
-  public login() {
+  public login(loginParams) {
+  
+  var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+ if (filter.test(loginParams.username) == false) {
+		alert('Please provide a valid email address');
+		return false;
+	}
+  var that = this;
+  var data  = {token:''};
+  that.fbs.login(loginParams.username,loginParams.password)
+  .subscribe(data => {
+   that.authSuccess(data.token);
+   
+        // that.getNewJwt();
+        // that.scheduleRefresh();
+  // that.nav.push(ListPage);
+ // that.nav.setRoot(ListPage);
+  });
     // Show the Auth0 Lock widget
-    this.lock.show({
+  /*  this.lock.show({
       authParams: {
         scope: 'openid offline_access',
         device: 'Mobile device'
@@ -51,16 +68,27 @@ export class AuthService {
       this.zoneImpl.run(() => this.user = profile);
       // Schedule a token refresh
       this.scheduleRefresh();
-    });    
+    });    */
   }
+  public signup(credits){
+  var that = this;
+		this.fbs.signup(credits).subscribe((data: any) => {
+			
+	alert("Successfully created user account with uid:"+ data);
+					that.local.set('name', credits.name);
+					that.local.set('phone', credits.phone);
+					that.local.set('community', credits.community);
+					that.local.set('email', credits.username);
+				});
   
+  }
   public logout() {
     this.local.remove('profile');
     this.local.remove('id_token');
     this.local.remove('refresh_token');
     this.zoneImpl.run(() => this.user = null);
     // Unschedule the token refresh
-    this.unscheduleRefresh();
+   // this.unscheduleRefresh();
   }
   
   public scheduleRefresh() {
@@ -80,9 +108,9 @@ export class AuthService {
         return Observable.interval(delay);
       });
      
-    this.refreshSubscription = source.subscribe(() => {
+  /*  this.refreshSubscription = source.subscribe(() => {
       this.getNewJwt();
-    });
+    }); */
   }
   
   public startupTokenRefresh() {
@@ -113,13 +141,13 @@ export class AuthService {
        });
     }
   }
-  
+ /* 
   public unscheduleRefresh() {
     // Unsubscribe fromt the refresh
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
-  }
+  } */
   
   public getNewJwt() {
     // Get a new JWT from Auth0 using the refresh token saved
@@ -135,5 +163,10 @@ export class AuthService {
       console.log(error);
     });
     
+  }
+  authSuccess(token:any) {
+   // this.error = null;
+    this.local.set('id_token', token);
+    this.user = this.jwtHelper.decodeToken(token).username;
   }
 }

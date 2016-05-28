@@ -1,11 +1,21 @@
 <ion-navbar *navbar>
-  <ion-title>Profile</ion-title>
+  <ion-title>Community App</ion-title>
 </ion-navbar>
 
 <ion-content padding *ngIf="!auth.authenticated()">
-  
-  <button block (click)="auth.login()">Login</button>
-  
+<form #loginCreds="ngForm" (ngSubmit)="auth.login(loginCreds.value)">
+   <ion-item>
+            <ion-label>Username</ion-label>
+            <ion-input type="text" ngControl="username"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Password</ion-label>
+            <ion-input type="password" ngControl="password"></ion-input>
+          </ion-item>
+
+  <button block>Login</button>
+  </form>
 </ion-content>
 
 <ion-content padding *ngIf="auth.authenticated()">  

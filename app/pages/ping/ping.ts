@@ -35,5 +35,21 @@ export class PingPage {
         err => this.error = err
       );
   }
+  signup(credentials){
+  	var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+ if (filter.test(credentials.username) == false) {
+		alert('Please provide a valid email address');
+		return false;
+	}
+	if(!credentials.username){
+		alert('invalid username');
+		return;
+	}
+	if(!credentials.password){
+		alert('invalid username');
+		return;
+	}
+	this.auth.signup(credentials);
+  }
   
 }

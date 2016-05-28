@@ -1,11 +1,14 @@
 import {App, Platform} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {TabsPage} from './pages/tabs/tabs';
+
+import {NotificationsPage} from './pages/notifications/notifications';
 import {provide} from '@angular/core';
 import {Http} from '@angular/http'
 import {AuthHttp, AuthConfig} from 'angular2-jwt';
 import {AuthService} from './services/auth/auth';
 
+import {FirebaseService} from './services/firebaseService';
 // https://angular.io/docs/ts/latest/api/core/Type-interface.html
 import {Type} from '@angular/core';
 
@@ -20,12 +23,13 @@ import {Type} from '@angular/core';
       },
       deps: [Http]
     }),
-    AuthService
+    AuthService,FirebaseService
   ]
 })
 export class MyApp {
   rootPage: Type = TabsPage;
 
+  pages: Array<{title: string, component: any}>;
   constructor(platform: Platform, private authHttp: AuthHttp, private auth: AuthService) {
     platform.ready().then(() => {
       StatusBar.styleDefault();
@@ -34,7 +38,11 @@ export class MyApp {
       // token in local storage. If there is, we should
       // schedule an initial token refresh for when the
       // token expires
+	   this.pages = [
+			{ title: 'Notifications', component: NotificationsPage }
+		];
       this.auth.startupTokenRefresh();
     });
   }
+
 }
