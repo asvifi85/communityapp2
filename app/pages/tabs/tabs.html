@@ -1,5 +1,9 @@
 
-<ion-content padding *ngIf="!auth.authenticated()">
+  
+     <input type="hidden" [(ngModel)]="auth.authType" />
+
+  <div [ngSwitch]="auth.authType" style="height:100%">
+<ion-content *ngSwitchWhen="'login'" padding *ngIf="!auth.authenticated()">
 <ion-tabs>
 
   
@@ -9,7 +13,7 @@
 
 </ion-content>
 
-<ion-content padding *ngIf="auth.authenticated()"> 
+<ion-content *ngSwitchWhen="'profile'" padding *ngIf="auth.authenticated()"> 
   <ion-menu id="loggedInMenu" [content]="content">
 
   <ion-toolbar>
@@ -33,3 +37,4 @@
 
 
 </ion-content>
+  </div>

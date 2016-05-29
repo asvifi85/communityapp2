@@ -5,17 +5,18 @@ import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class FirebaseService {
-
+    fbauth : boolean;
     baseRef = new Firebase('https://community-app.firebaseio.com/');
     constructor() {
-        
+        var that = this;
         // check for changes in auth status
         this.baseRef.onAuth((authData) => {
             if (authData) {
                 console.log("User " + authData.uid + " is logged in with " + authData.provider);
-				
+				that.fbauth = true;
             } else {
                 console.log("User is logged out");
+                that.fbauth = false;
             }
         })
     }

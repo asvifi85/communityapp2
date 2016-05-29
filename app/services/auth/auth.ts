@@ -18,6 +18,10 @@ export class AuthService {
   
   constructor(private app: IonicApp,private authHttp: AuthHttp, zone: NgZone,private fbs: FirebaseService) {
     this.zoneImpl = zone;
+    if(fbs.fbauth){
+        this. authType = "profile";
+        
+    }
     // Check if there is a profile saved in local storage
    // alert(this.authenticated());
 
@@ -47,6 +51,7 @@ export class AuthService {
   .subscribe(data => {
    that.authSuccess(data.token);
    that.user = "profile";
+   that.authType = "profile";
         // that.getNewJwt();
         // that.scheduleRefresh();
    //that.nav.push(ListPage);
@@ -104,6 +109,7 @@ export class AuthService {
   public logout() {
     this.local.remove('id_token');
     this.user = null;
+    this.authType = "login";
 	this.fbs.logout();
   }
   public scheduleRefresh() {
