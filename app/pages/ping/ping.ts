@@ -1,7 +1,8 @@
-import {Page} from 'ionic-angular';
+import {Page,NavController} from 'ionic-angular';
 import {Http} from '@angular/http';
 import {AuthHttp} from 'angular2-jwt';
 import {AuthService} from '../../services/auth/auth';
+import {ProfilePage} from '../profile/profile';
 import 'rxjs/add/operator/map';
 
 @Page({
@@ -11,7 +12,7 @@ export class PingPage {
   message: string;
   error: string;
   
-  constructor(private http: Http, private authHttp: AuthHttp, private auth: AuthService) {}
+  constructor(private http: Http, public nav: NavController,    private authHttp: AuthHttp, private auth: AuthService) {}
   
   ping() {
     // Change the endpoint up for
@@ -49,7 +50,13 @@ export class PingPage {
 		alert('invalid username');
 		return;
 	}
-	this.auth.signup(credentials);
+	var signupstatus = this.auth.signup(credentials);
+    alert(signupstatus);
+    
+    if(signupstatus){
+             this.nav.setRoot(ProfilePage);
+        
+    }
   }
   
 }

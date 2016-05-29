@@ -3,8 +3,8 @@
 <ion-tabs>
 
   
-  <ion-tab [root]="profilePage" tabTitle="Login" tabIcon="person"></ion-tab>
-  <ion-tab [root]="pingPage" tabTitle="Signup" tabIcon="pulse"></ion-tab>
+  <ion-tab [root]="profilePage"  tabIcon="person"></ion-tab>
+ <!-- <ion-tab [root]="pingPage" tabTitle="Signup" tabIcon="pulse"></ion-tab>  -->
 </ion-tabs>
 
 </ion-content>
@@ -20,6 +20,9 @@
     <ion-list>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
         {{p.title}}
+      </button>
+	  <button menuClose ion-item (click)="auth.logout()">
+        Logout
       </button>
     </ion-list>
   </ion-content>

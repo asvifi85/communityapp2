@@ -1,5 +1,7 @@
-import {Page, NavController} from 'ionic-angular';
+import {App, IonicApp,Page, NavController} from 'ionic-angular';
 import {AuthService} from '../../services/auth/auth';
+
+import {PingPage} from '../../pages/ping/ping';
 
 /*
   Generated class for the ProfilePage page.
@@ -11,17 +13,16 @@ import {AuthService} from '../../services/auth/auth';
   templateUrl: 'build/pages/profile/profile.html',
 })
 export class ProfilePage {
-  constructor(public nav: NavController,private auth: AuthService) {
+   title:string
+  constructor(private app: IonicApp,public nav: NavController,private auth: AuthService) {
   // alert(auth.authenticated());
 	//	if(auth.authenticated())
-	//this.openPage(ListPage);
+        this.title = "Login";
   
   }
- /* 
-   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    let nav = this.app.getComponent('nav');
-    nav.setRoot(page.component);
-  } */
+  openSignup(){
+//tabTitle
+ this.title = "Signup";
+ this.nav.setRoot(PingPage);
+  }
 }

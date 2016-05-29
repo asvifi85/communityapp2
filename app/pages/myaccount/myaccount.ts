@@ -1,4 +1,5 @@
-import {Page,Storage, LocalStorage, NavController} from 'ionic-angular';
+import {Page,Storage, LocalStorage, NavController,Platform} from 'ionic-angular';
+import {Camera} from 'ionic-native';
 
 /*
   Generated class for the MyaccountPage page.
@@ -10,6 +11,7 @@ import {Page,Storage, LocalStorage, NavController} from 'ionic-angular';
   templateUrl: 'build/pages/myaccount/myaccount.html',
 })
 export class MyaccountPage {
+ base64Image: string;
   name: any;
   email: any;
   phone: any;
@@ -17,14 +19,31 @@ export class MyaccountPage {
   images: Array<{src: String}>;
   
   local: Storage = new Storage(LocalStorage);
-  constructor(public nav: NavController) {
+  constructor(public nav: NavController,private platform:Platform) {
 		this.name = this.local.get('name');
 		this.phone = this.local.get('phone');
 		this.email = this.local.get('email');
 		this.community = this.local.get('community');
 		 this.images = [{src: 'img/speakers/puppy.jpg'}];
+    this.platform = platform;
   }
-  takePhoto() {
+  takePicture(){
+  var that = this;
+    Camera.getPicture({
+        destinationType: Camera.DestinationType.DATA_URL,
+        targetWidth: 500,
+        targetHeight: 500
+    }).then((imageData) => {
+      // imageData is a base64 encoded string
+        let base64Image = "data:image/jpeg;base64," + imageData;
+		that.images.unshift({
+             src: base64Image
+           })
+    }, (err) => {
+        console.log(err);
+    });
+  }
+ /* takePicture() {
 	
     this.platform.ready().then(() => {
       let options = {
@@ -48,5 +67,5 @@ export class MyaccountPage {
         }, options
       );
     });
-  }
+  } */
 }

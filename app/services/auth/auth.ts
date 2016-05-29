@@ -1,4 +1,4 @@
-import {Storage, LocalStorage} from 'ionic-angular';
+import {App, IonicApp,Storage, LocalStorage} from 'ionic-angular';
 import {AuthHttp, JwtHelper, tokenNotExpired} from 'angular2-jwt';
 import {Injectable, NgZone} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
@@ -14,15 +14,18 @@ export class AuthService {
  // refreshSubscription: any;
   user: Object;
   zoneImpl: NgZone;
+  authType: string = "login";
   
-  constructor(private authHttp: AuthHttp, zone: NgZone,private fbs: FirebaseService) {
+  constructor(private app: IonicApp,private authHttp: AuthHttp, zone: NgZone,private fbs: FirebaseService) {
     this.zoneImpl = zone;
     // Check if there is a profile saved in local storage
-    this.local.get('profile').then(profile => {
+   // alert(this.authenticated());
+
+  /*  this.local.get('profile').then(profile => {
       this.user = JSON.parse(profile);
     }).catch(error => {
       console.log(error);
-    });
+    }); */
     
   }
   
@@ -43,11 +46,12 @@ export class AuthService {
   that.fbs.login(loginParams.username,loginParams.password)
   .subscribe(data => {
    that.authSuccess(data.token);
-   
+   that.user = "profile";
         // that.getNewJwt();
         // that.scheduleRefresh();
-  // that.nav.push(ListPage);
- // that.nav.setRoot(ListPage);
+   //that.nav.push(ListPage);
+    // that.nav.setRoot(ListPage);
+  //  this.openPage();
   });
     // Show the Auth0 Lock widget
   /*  this.lock.show({
@@ -80,17 +84,28 @@ export class AuthService {
 					that.local.set('community', credits.community);
 					that.local.set('email', credits.username);
 				});
+        return true;
   
   }
-  public logout() {
+  openPage(page) {
+    // Reset the content nav to have just this page
+    // we wouldn't want the back button to show in this scenario
+    let nav = this.app.getComponent('nav');
+    nav.setRoot(page.component);
+  } 
+ /* public logout() {
     this.local.remove('profile');
     this.local.remove('id_token');
     this.local.remove('refresh_token');
     this.zoneImpl.run(() => this.user = null);
     // Unschedule the token refresh
    // this.unscheduleRefresh();
+  } */
+  public logout() {
+    this.local.remove('id_token');
+    this.user = null;
+	this.fbs.logout();
   }
-  
   public scheduleRefresh() {
     // If the user is authenticated, use the token stream
     // provided by angular2-jwt and flatMap the token
