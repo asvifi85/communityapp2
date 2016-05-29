@@ -9,12 +9,14 @@ import {AuthHttp, AuthConfig} from 'angular2-jwt';
 import {AuthService} from './services/auth/auth';
 
 import {FirebaseService} from './services/firebaseService';
+
+import {LoadingModal} from './components/loading-modal/loading-modal';
 // https://angular.io/docs/ts/latest/api/core/Type-interface.html
 import {Type} from '@angular/core';
 
 
 @App({
-  template: '<ion-nav [root]="rootPage"></ion-nav>',
+  template: '<ion-nav [root]="rootPage"></ion-nav><loading-modal id="loading"></loading-modal>',
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/,
   providers: [
     provide(AuthHttp, {
@@ -24,7 +26,8 @@ import {Type} from '@angular/core';
       deps: [Http]
     }),
     AuthService,FirebaseService
-  ]
+  ],
+  directives: [LoadingModal]
 })
 export class MyApp {
   rootPage: Type = TabsPage;

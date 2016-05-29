@@ -13,7 +13,7 @@ import {PingPage} from '../../pages/ping/ping';
   templateUrl: 'build/pages/profile/profile.html',
 })
 export class ProfilePage {
-   title:string
+   title:string;
   constructor(private app: IonicApp,public nav: NavController,private auth: AuthService) {
   // alert(auth.authenticated());
 	//	if(auth.authenticated())
